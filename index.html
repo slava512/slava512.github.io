@@ -1,1 +1,146 @@
-"hello world" 
+<p><span style="font-size: 128px;"><a href="/public/win.html" rel="noopener noreferrer" target="_blank">windows games</a></span></p>
+
+<p><span style="font-size: 128px;"><a href="/public/v86.html" rel="noopener noreferrer" target="_blank">v86 windows</a></span></p>
+
+<p><span style="font-size: 128px;"><a href="/public/dos.html" rel="noopener noreferrer" target="_blank">dos games</a></span></p>
+
+<hr>
+
+<div class="sketchfab-embed-wrapper">
+    <iframe id="model1" title="A 3D model" width="100%" height="100%" src="https://sketchfab.com/models/c4f5791943764c6b88ff3770ff4cbb3b/embed?autostart=1&amp;camera=0" frameborder="0" allow="autoplay; fullscreen; vr" mozallowfullscreen="true" webkitallowfullscreen="true"></iframe>
+
+</div>
+
+<canvas id="canvas"></canvas>
+
+<script>
+window.onload = function(){
+	//canvas init
+	var canvas = document.getElementById("canvas");
+	var ctx = canvas.getContext("2d");
+	
+	//canvas dimensions
+	var W = window.innerWidth;
+	var H = window.innerHeight;
+	canvas.width = W;
+	canvas.height = H;
+	
+	//snowflake particles
+	var mp = 50; //max particles
+	var particles = [];
+	for(var i = 0; i < mp; i++)
+	{
+		particles.push({
+			x: Math.random()*W, //x-coordinate
+			y: Math.random()*H, //y-coordinate
+			r: Math.random()*4+1, //radius
+			d: Math.random()*mp //density
+		})
+	}
+	
+	//Lets draw the flakes
+	function draw()
+	{
+		ctx.clearRect(0, 0, W, H);
+		
+		ctx.fillStyle = "rgba(255, 255, 255, 0.8)";
+		ctx.beginPath();
+		for(var i = 0; i < mp; i++)
+		{
+			var p = particles[i];
+			ctx.moveTo(p.x, p.y);
+			ctx.arc(p.x, p.y, p.r, 0, Math.PI*2, true);
+		}
+		ctx.fill();
+		update();
+	}
+	
+	//Function to move the snowflakes
+	//angle will be an ongoing incremental flag. Sin and Cos functions will be applied to it to create vertical and horizontal movements of the flakes
+	var angle = 0;
+	function update()
+	{
+		angle += 0.01;
+		for(var i = 0; i < mp; i++)
+		{
+			var p = particles[i];
+			//Updating X and Y coordinates
+			//We will add 1 to the cos function to prevent negative values which will lead flakes to move upwards
+			//Every particle has its own density which can be used to make the downward movement different for each flake
+			//Lets make it more random by adding in the radius
+			p.y += Math.cos(angle+p.d) + 1 + p.r/2;
+			p.x += Math.sin(angle) * 2;
+			
+			//Sending flakes back from the top when it exits
+			//Lets make it a bit more organic and let flakes enter from the left and right also.
+			if(p.x > W+5 || p.x < -5 || p.y > H)
+			{
+				if(i%3 > 0) //66.67% of the flakes
+				{
+					particles[i] = {x: Math.random()*W, y: -10, r: p.r, d: p.d};
+				}
+				else
+				{
+					//If the flake is exitting from the right
+					if(Math.sin(angle) > 0)
+					{
+						//Enter from the left
+						particles[i] = {x: -5, y: Math.random()*H, r: p.r, d: p.d};
+					}
+					else
+					{
+						//Enter from the right
+						particles[i] = {x: W+5, y: Math.random()*H, r: p.r, d: p.d};
+					}
+				}
+			}
+		}
+	}
+	
+	//animation loop
+	setInterval(draw, 33);
+}
+
+
+
+
+
+</script>
+
+<style>
+a {
+color: #FFFFFF;
+text-shadow: #FFF 0px 0px 5px, #FFF 0px 0px 10px, #FFF 0px 0px 15px, #FF2D95 0px 0px 20px, #FF2D95 0px 0px 30px, #FF2D95 0px 0px 40px, #FF2D95 0px 0px 50px, #FF2D95 0px 0px 75px;
+color: #FFFFFF;
+}
+
+canvas {
+	display: block;
+	  position: fixed;
+  left: 0px;
+  top: 0px;
+    width: 100%;
+  height: 100%;
+  z-index: -1;
+}
+
+body {
+	/*You can use any kind of background here.*/
+	background: #CE15CC;
+	background: -moz-linear-gradient(top, #CE15CC 0%, #1C6EA4 50%, #C5C5C5 100%);
+	background: -webkit-linear-gradient(top, #CE15CC 0%, #1C6EA4 50%, #C5C5C5 100%);
+	background: linear-gradient(to bottom, #CE15CC 0%, #1C6EA4 50%, #C5C5C5 100%);
+	  z-index: -3;
+}
+  
+#model1 {
+	display: block;
+	  position: fixed;
+  left: 0px;
+  top: 0px;
+    width: 100%;
+  height: 100%;
+  z-index: -2;
+}
+
+<style/>
