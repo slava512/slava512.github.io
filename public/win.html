@@ -17,7 +17,7 @@
   <canvas id="jsdos"></canvas>
   <script>
     Dos(document.getElementById("jsdos")).ready((fs, main) => {
-      fs.extract("vc3.zip").then(() => {
+      fs.extract("https://slavatestapp1.herokuapp.com/vc3.zip").then(() => {
         main(["-conf", "cfg.conf"])
       });
     });
